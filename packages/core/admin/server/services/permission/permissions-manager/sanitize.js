@@ -10,6 +10,7 @@ const {
   isNil,
   flatMap,
   some,
+  getOr,
   prop,
   uniq,
   intersection,
@@ -46,6 +47,8 @@ module.exports = ({ action, ability, model }) => {
     const permittedFields = fields.shouldIncludeAll ? null : getOutputFields(fields.permitted);
 
     return pipeAsync(
+      // Remove fields hidden from the admin
+      traverseEntity(removeHiddenFields, { schema }),
       // Remove unallowed fields from admin::user relations
       traverseEntity(pickAllowedAdminUserFields, { schema }),
       // Remove not allowed fields (RBAC)
@@ -118,6 +121,15 @@ module.exports = ({ action, ability, model }) => {
       } else {
         set(key, pickAllowedFields(value));
       }
+    }
+  };
+
+  const removeHiddenFields = ({ key, schema }, { remove }) => {
+    const hiddenConfigPath = ['config', 'attributes', key, 'hidden'];
+    const isHidden = getOr(false, hiddenConfigPath, schema);
+
+    if (isHidden) {
+      remove(key);
     }
   };
 
