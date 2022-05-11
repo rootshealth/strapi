@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-graphql",
-  "version": "3.6.9",
+  "version": "3.6.9-apollo-config-fix",
   "description": "Adds GraphQL endpoint with default API methods.",
   "strapi": {
     "name": "graphql",
