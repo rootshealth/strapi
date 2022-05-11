@@ -146,6 +146,8 @@ module.exports = strapi => {
       server.applyMiddleware({
         app: strapi.app,
         path: config.endpoint,
+        cors: apolloServerConfig.cors,
+        bodyParserConfig: apolloServerConfig.bodyParserConfig,      
       });
 
       strapi.plugins.graphql.destroy = async () => {
